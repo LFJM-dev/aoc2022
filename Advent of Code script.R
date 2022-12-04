@@ -116,5 +116,56 @@ B <- B %>%
     Play == "Scissors" ~3
   ))
 B$Finalscore <- B$Win+B$Playscore
-view(B)
 sum(B$Finalscore)
+
+## Day 3 
+library ("berryFunctions")
+library(readxl)
+library(tidyverse)
+#Formatting
+CC <- read_excel("C:\\Users\\leono\\OneDrive\\Documents\\Advent of Code\\Day3.xlsx")
+CC <- insertRows(CC, 1 , new = NA)
+CC[1,] <- colnames(CC)
+CC <- rename(CC,"Input" = FqdWDFppHWhmwwzdjvjTRTznjdMv)
+as.data.frame(CC)
+#function to check even
+even <- function(x){
+  if(nchar(x)%%2==0){
+    "Even"
+  }else{
+    "Uneven"
+  }}
+#test
+h <- apply(CC,1,even)
+length(grep("Even", h))
+#All 300 entries have an even number of characters
+CC$Output1 <- NA
+splitchar <- function(x){strsplit(x,"")[[1]]}
+bre <- function(i){
+  i <- splitchar(i) 
+  if(sum(nchar(i))%%2 == 0){
+    a <- (i[0:((0.5*(sum(nchar(i)))))])
+    b <- (i[((0.5*(sum(nchar(i))))+1):length(i)])
+    print(intersect(a,b))
+  }else{
+    a <- (i[0:((0.5*(sum(nchar(i)))))])
+    b <- (i[((0.5*(sum(nchar(i))))+1):length(i)])
+    print(intersect(a,b))
+  }
+}
+CC$Output1[1:300] <- apply(CC,1,bre)
+#Score calculation
+CC$Output2 <- NA
+view(CC)
+Scorecalc <- data.frame(char=c(letters),num=c(1:26))
+Scoretemp <- data.frame(char=c(LETTERS),num=c(27:52))
+Scorecalc <- rbind(Scorecalc,Scoretemp)
+finder <- function(x){which(grepl(x, Scorecalc$char))} 
+CC$Output2 <- lapply(CC$Output1,finder)
+view(CC)
+#Fucking finally
+CC$Output2<-as.numeric(CC$Output2)
+sum(CC$Output2)
+#Answer is 8243
+
+#Day 3 - part 2
